@@ -1,0 +1,50 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ticketmanager
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql
+      - mongodb
+    networks:
+      - ticketmanager-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: ticketmanager-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+    networks:
+      - ticketmanager-network
+
+  mongodb:
+    image: mongo:latest
+    container_name: ticketmanager-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_MONGO_PASSWORD}
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./docker/mongo:/data/db
+    networks:
+      - ticketmanager-network
+
+networks:
+  ticketmanager-network:
+    driver: bridge
