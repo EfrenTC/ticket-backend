@@ -11,6 +11,7 @@ return new class extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('gasto');
             $table->decimal('importe', 10, 2);
             $table->enum('categoria', [
