@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TicketController;
 
 Route::get('/check', function () {
     return response()->json([
@@ -9,3 +10,5 @@ Route::get('/check', function () {
         'db_mongo' => 'OK'
     ]);
 });
+
+Route::apiResource('tickets', TicketController::class);
